@@ -2,7 +2,7 @@ from nltk.corpus import words
 import string, os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-with open('./compounds', 'r') as f:
+with open('./compounds.txt', 'r') as f:
     compounds = [(x.strip()) for x in f.readlines() if x.strip() != '']
 
 vocabulary_files = {}
@@ -61,5 +61,5 @@ for compound in compounds:
     out += "\n[" + compound + "]"
     fun(english_words, compound, '')
 
-with open('./results', 'w') as f:
+with open('./results.txt', 'w') as f:
     f.write(out)
