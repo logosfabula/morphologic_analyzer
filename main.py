@@ -16,6 +16,7 @@ vocabulary_files['conjunctions'] = '/vocabularies/25_top_English_conjunctions'
 vocabulary_files['interjections'] = '/vocabularies/100_top_English_interjections'
 vocabulary_files['most_common_english_words'] = '/vocabularies/10000_most_common_English_words'
 vocabulary_files['nltk_words'] = '/vocabularies/235000_nltk_English_words'
+vocabulary_files['articles'] = '/vocabularies/English_articles'
 
 vocabulary = {}
 for pos in vocabulary_files:
