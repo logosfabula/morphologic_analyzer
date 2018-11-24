@@ -6,22 +6,22 @@ with open('./compounds', 'r') as f:
     compounds = [(x.strip()) for x in f.readlines() if x.strip() != '']
 
 vocabulary_files = {}
-vocabulary_files['prepositions'] = '/vocabularies/50_top_English_prepositions.txt'
-vocabulary_files['pronouns'] = '/vocabularies/60_top_English_pronouns.txt'
-vocabulary_files['adverbs'] = '/vocabularies/250_top_English_adverbs.txt'
-vocabulary_files['adjectives'] = '/vocabularies/500_top_English_adjectives.txt'
-vocabulary_files['verbs'] = '/vocabularies/1000_top_English_verbs.txt'
-vocabulary_files['nouns'] = '/vocabularies/1500_top_English_nouns.txt'
-vocabulary_files['conjunctions'] = '/vocabularies/25_top_English_conjunctions.txt'
-vocabulary_files['interjections'] = '/vocabularies/100_top_English_interjections.txt'
-vocabulary_files['most_common_english_words'] = '/vocabularies/10000_most_common_English_words.txt'
-vocabulary_files['nltk_words'] = '/vocabularies/235000_nltk_English_words.txt'
+vocabulary_files['prepositions'] = '/vocabularies/50_top_English_prepositions'
+vocabulary_files['pronouns'] = '/vocabularies/60_top_English_pronouns'
+vocabulary_files['adverbs'] = '/vocabularies/250_top_English_adverbs'
+vocabulary_files['adjectives'] = '/vocabularies/500_top_English_adjectives'
+vocabulary_files['verbs'] = '/vocabularies/1000_top_English_verbs'
+vocabulary_files['nouns'] = '/vocabularies/1500_top_English_nouns'
+vocabulary_files['conjunctions'] = '/vocabularies/25_top_English_conjunctions'
+vocabulary_files['interjections'] = '/vocabularies/100_top_English_interjections'
+vocabulary_files['most_common_english_words'] = '/vocabularies/10000_most_common_English_words'
+vocabulary_files['nltk_words'] = '/vocabularies/235000_nltk_English_words'
 
 vocabulary = {}
 for pos in vocabulary_files:
     with open(dir_path + vocabulary_files[pos]) as vf:
         vocabulary[pos] = [(x.strip()) for x in vf.readlines() if x.strip() != '']
- vocabulary['articles'] = ['the', 'a']
+vocabulary['articles'] = ['the', 'a']
 vocabulary['verbs'].append('do')
 
 english_words = []
