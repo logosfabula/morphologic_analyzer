@@ -21,8 +21,6 @@ vocabulary = {}
 for pos in vocabulary_files:
     with open(dir_path + vocabulary_files[pos]) as vf:
         vocabulary[pos] = [(x.strip()) for x in vf.readlines() if x.strip() != '']
-vocabulary['articles'] = ['the', 'a']
-vocabulary['verbs'].append('do')
 
 english_words = []
 english_words += vocabulary['nltk_words']
