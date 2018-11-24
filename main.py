@@ -26,7 +26,10 @@ for pos in vocabulary_files:
 english_words = []
 english_words += vocabulary['nltk_words']
 english_words += vocabulary['most_common_english_words']
+
+# removes all 2-letters acronyms and abbreviations
 english_words = [w for w in english_words if len(w) > 2]
+
 english_words += vocabulary['prepositions']
 english_words += vocabulary['pronouns']
 english_words += vocabulary['adverbs']
