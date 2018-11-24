@@ -8,7 +8,7 @@ Type:
 `git clone https://github.com/logosfabula/morphologic_analyzer.git`
 
 Then edit:
-`compounds`
+`./compounds.txt`
 Here, you will add your English compounds.
 
 ### Prerequisites
@@ -20,6 +20,12 @@ You need NLTK.
 ### Installing
 
 No need of installation.
+
+### Use
+
+`./python main.py`
+
+Results will appear on screen and be saved in file `./results.txt`
 
 ## Authors
 
