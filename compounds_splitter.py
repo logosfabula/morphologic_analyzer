@@ -2,6 +2,7 @@
 ##############          COMPOUND WORDS SPLITTER                               ##############
 ##############                                                                ##############
 ##############          1) install NLTK                                       ##############
+##############              - `sudo pip install -U nltk`                      ##############
 ##############                                                                ##############
 ##############          2) edit files:                                        ##############
 ##############              - compounds.txt                                   ##############
@@ -80,12 +81,18 @@ english_words = set(english_words)
 english_words = [c for c in english_words if c not in removed_words]
 
 
-# MAIN FUNCTIONS
+# FUNCTION DEFINITIONS
+
+## utility functions
+
+## main functions
+
+## parameters: list of components, compound words, accumulator for tail recursion (empty string), 
 def split_compound(components, compound, acc, out):
     for c in components:
         if compound == '':
-            print(acc)
-            out += acc + '\n'
+            #print(acc)
+            out.append(acc)
             return
         elif compound.startswith(c):
             split_compound(components, compound[len(c):], acc + " " + c, out)
@@ -93,17 +100,33 @@ def split_compound(components, compound, acc, out):
             pass
 
 def main():
-    out = ''
-    for compound in compounds:    
-        print("\n[" + compound + "]")
-        out += "\n[" + compound + "]"
-        split_compound(english_words, compound, '', out)
+
+    # results as a pass-by-reference type variable: a list
+    results = []
+    
+    # main cycle through compounds
+    solutions = 0
+    for compound in compounds:
+        print("Working on '%s'... " % compound)
+        results.append("[" + compound + "]")
+        split_compound(english_words, compound, '', results)
+        print("%d solutions found." % (len(results) - solutions - 1), end="\n\n")
+        solutions = len(results)
+
+    print('Results:')
+
+    for o in results:
+        print(o)
 
     with open('./results.txt', 'w') as f:
-        f.write(out)
+        for o in results:
+            f.write(o + "\n")
 
 
 # MAIN
 
 if __name__ == "__main__":
+    import sys
+    print(sys.executable)
     main()
+    
