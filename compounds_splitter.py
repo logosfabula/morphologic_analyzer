@@ -87,15 +87,14 @@ english_words = [c for c in english_words if c not in removed_words]
 
 ## main functions
 
-## parameters: list of components, compound words, accumulator for tail recursion (empty string), 
-def split_compound(components, compound, acc, out):
+## parameters: list of components, compound words, accumulator for tail recursion (empty string), stored results
+def split_compound(components, compound, acc, results):
     for c in components:
         if compound == '':
-            #print(acc)
-            out.append(acc)
+            results.append(acc)
             return
         elif compound.startswith(c):
-            split_compound(components, compound[len(c):], acc + " " + c, out)
+            split_compound(components, compound[len(c):], acc + " " + c, results)
         else:
             pass
 
