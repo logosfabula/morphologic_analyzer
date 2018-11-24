@@ -5,6 +5,9 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 with open('./compounds.txt', 'r') as f:
     compounds = [(x.strip()) for x in f.readlines() if x.strip() != '']
 
+with open('./removed_words.txt', 'r') as f:
+    removed_words = [(x.strip()) for x in f.readlines() if x.strip() != '']
+
 vocabulary_files = {}
 vocabulary_files['prepositions'] = '/vocabularies/50_top_English_prepositions'
 vocabulary_files['pronouns'] = '/vocabularies/60_top_English_pronouns'
@@ -41,7 +44,6 @@ english_words += vocabulary['interjections']
 english_words += vocabulary['articles']
 english_words = set(english_words)
 
-removed_words = []
 english_words = [c for c in english_words if c not in removed_words]
 
 out = ''
