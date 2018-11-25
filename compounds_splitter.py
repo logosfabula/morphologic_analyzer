@@ -25,6 +25,7 @@ from nltk.corpus import words
 compounds_file = './compounds.txt'
 removed_words = './removed_words.txt'
 vocabularies_folder = './vocabularies/'
+results_file = './results.txt'
 
 vocabulary_files = {}
 vocabulary_files['prepositions'] = vocabularies_folder + '50_top_English_prepositions'
@@ -64,6 +65,7 @@ english_words += vocabulary['most_common_english_words']
 ## remove all 2-letters acronyms and abbreviations from general lexicon
 english_words = [w for w in english_words if len(w) > 2]
 
+## select POS-categories
 english_words += vocabulary['prepositions']
 english_words += vocabulary['pronouns']
 english_words += vocabulary['adverbs']
@@ -74,18 +76,14 @@ english_words += vocabulary['conjunctions']
 english_words += vocabulary['interjections']
 english_words += vocabulary['articles']
 
-## make the components distinct (there are intersections with general vocabularies)
+## make the components distinct (because there are intersections with general vocabularies)
 english_words = set(english_words)
 
-## remove components in blacklist
+## remove components in blacklist from selected components
 english_words = [c for c in english_words if c not in removed_words]
 
 
-# FUNCTION DEFINITIONS
-
-## utility functions
-
-## main functions
+# MAIN LOGIC
 
 ## parameters: list of components, compound words, accumulator for tail recursion (empty string), stored results
 def split_compound(components, compound, acc, results):
@@ -100,32 +98,29 @@ def split_compound(components, compound, acc, results):
 
 def main():
 
-    # results as a pass-by-reference type variable: a list
+    ### results as a pass-by-reference type variable: a list
     results = []
     
-    # main cycle through compounds
-    solutions = 0
-    for compound in compounds:
-        print("Working on '%s'... " % compound)
-        results.append("[" + compound + "]")
+    ### main cycle through compounds (eliminates duplicates, required for correct output)
+    for compound in sorted(set(compounds), key=compounds.index):
+        ### insert compound in results
+        results.append(">" + compound)
+        ### call to main logic function
         split_compound(english_words, compound, '', results)
-        print("%d solutions found." % (len(results) - solutions - 1), end="\n\n")
-        solutions = len(results)
+        ### get solution for current compound by slicing results from the current compound on
+        current_compound_solutions = [r.strip() for r in results[results.index(">" + compound) +1:] if r.strip() != compound]
+        ### print output
+        print("{} solutions for '{}':".format(len(current_compound_solutions), compound))
+        print("{}.".format(", ".join(current_compound_solutions)), end="\n\n")
 
-    print('Results:')
-
-    for o in results:
-        print(o)
-
-    with open('./results.txt', 'w') as f:
+    ### save to file
+    with open(results_file, 'w') as f:
         for o in results:
             f.write(o + "\n")
 
 
 # MAIN
 
+## 
 if __name__ == "__main__":
-    import sys
-    print(sys.executable)
     main()
-    
