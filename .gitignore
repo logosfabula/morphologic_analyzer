@@ -3,3 +3,5 @@
 results.txt
 compounds.txt
 removed_words.txt
+.pytest_cache
+__pycache__
