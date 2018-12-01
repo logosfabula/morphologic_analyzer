@@ -60,9 +60,9 @@ def print_header(header):
     print('\n'.join(header), end='\n\n')
 
 
-# PYTHONIC MAIN
-
-if __name__ == "__main__":
+# PYTHONIC MAIN (taking care of Pytests too)
+import __main__
+if __name__ == "__main__" or 'test' in __main__.__file__:
 
 
     # IMPORTS
