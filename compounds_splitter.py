@@ -1,4 +1,5 @@
 ############################################################################################
+##############                                                                ##############
 ##############          COMPOUND WORDS SPLITTER                               ##############
 ##############                                                                ##############
 ##############          1) install NLTK                                       ##############
@@ -11,9 +12,14 @@
 ##############              with your list of components' exceptions          ##############
 ##############                                                                ##############
 ##############          3) run `python compounds_splitter.py`                 ##############
+##############                                                                ##############
+##############          Lexicon taken from various public sources             ##############
+##############          including NLTK and UPenn                              ##############
+##############                                                                ##############
 ############################################################################################
 
-# MAIN LOGIC
+
+# FUNCTIONS
 
 ## split_compound - parameters: list of components, compound words, accumulator for tail recursion (empty string), stored results
 def split_compound(components, compound, acc, results):
@@ -27,7 +33,7 @@ def split_compound(components, compound, acc, results):
             pass
 
 ## process_all_compounds - main loop
-def process_all_compounds():
+def process_all_compounds(is_direct_match_excluded):
 
     ### results as a pass-by-reference type variable: a list
     results = []
@@ -39,15 +45,19 @@ def process_all_compounds():
         ### call to main logic function
         split_compound(english_words, compound, '', results)
         ### get solution for current compound by slicing results from the current compound on
-        current_compound_solutions = [r.strip() for r in results[results.index(">" + compound) +1:] if r.strip() != compound]
+        current_compound_solutions = [r.strip() for r in results[results.index(">" + compound)+1:] if not (r.strip() == compound and is_direct_match_excluded)]
         ### print output
         print("{} solutions for '{}':".format(len(current_compound_solutions), compound))
-        print("{}.".format(", ".join(current_compound_solutions)), end="\n\n")
+        print("{}".format(", ".join(current_compound_solutions)), end="\n\n")
 
     ### save to file
     with open(results_file, 'w') as f:
         for o in results:
             f.write(o + "\n")
+
+## print header
+def print_header(header):
+    print('\n'.join(header), end='\n\n')
 
 
 # PYTHONIC MAIN
@@ -59,14 +69,18 @@ if __name__ == "__main__":
 
     import string, os
     from nltk.corpus import words
+    import argparse 
 
 
-    # CONFIG
+    # SETUP
 
     ## job, blacklist and output files
     compounds_file = './compounds.txt'
     removed_words = './removed_words.txt'
     results_file = './results.txt'
+
+    ## POS categories
+    POS_categories = {'P': 'prepositions', 'PRO': 'pronouns', 'ADV': 'adverbs', 'ADJ': 'adjectives', 'V': 'verbs', 'N': 'nouns', 'CONJ': 'conjunctions', 'INTJ': 'interjections', 'D': 'determiners'}
 
     ## vocabularies folder and files
     vocabularies_folder = './vocabularies/'
@@ -79,12 +93,44 @@ if __name__ == "__main__":
     vocabulary_files['nouns'] = vocabularies_folder + '1500_top_English_nouns'
     vocabulary_files['conjunctions'] = vocabularies_folder + '25_top_English_conjunctions'
     vocabulary_files['interjections'] = vocabularies_folder + '100_top_English_interjections'
-    vocabulary_files['most_common_english_words'] = vocabularies_folder + '10000_most_common_English_words'
+    vocabulary_files['uncategorized_english_words'] = vocabularies_folder + '10000_uncategorized_English_words'
     vocabulary_files['nltk_words'] = vocabularies_folder + '235000_nltk_English_words'
-    vocabulary_files['articles'] = vocabularies_folder + 'English_articles'
+    vocabulary_files['determiners'] = vocabularies_folder + 'English_determiners'
+
+    ## minimum uncategorized words length default value
+    MIN_LENGTH_DEFAULT = 3
+
+    ## exclude uncategorized words default value
+    EXCLUDE_UNCATEGORIZED = False
+
+    ## exclude direct matches default value
+    EXCLUDE_DIRECT_MATCHES = False
 
 
-    # SETUP
+    # INIT
+
+    ## initialise output header
+    output_header = []
+
+    ## argument parser setup
+    parser = argparse.ArgumentParser(description='English compound words splitter')
+    parser.add_argument('--exclude-less-than', '-l', action='store', dest='min_uncategorized_words_length', type=int, default=MIN_LENGTH_DEFAULT, help='Excludes uncategorized words components with less than the specified number of letters (default: {})'.format(MIN_LENGTH_DEFAULT))
+    parser.add_argument('--exclude-POS', '-p', dest='user_selected_vocabularies', default='', nargs='+', help='Exclude selected POS categories from components. Choose any of the following: P (prepositions), PRO (pronouns), ADV (adverbs), ADJ (adjectives), V (verbs), N (nouns), CONJ (conjunctions), INTJ (interjections), D (determiners). All of the above are selected by default')
+    parser.add_argument('--exclude-uncategorized', '-u', action="store_true", dest="exclude_uncategorized_words", default=EXCLUDE_UNCATEGORIZED, help='Exclude uncategorized words from components. Included by default')
+    parser.add_argument('--exclude-direct-match', '-d', action="store_true",  dest="exclude_direct_matches", default=EXCLUDE_DIRECT_MATCHES, help='Exclude direct matches from results. E.g.: "sunflower" only yields "sun flower" and not "sunflower, sun flower". Included by default')
+    arguments = parser.parse_args()
+
+    ### check wrong POS argument. Legal POS are: P (prepositions), PRO (pronouns), ADV (adverbs), ADJ (adjectives), V (verbs), N (nouns), CONJ (conjunctions), INTJ (interjections), D (determiners)
+    wrong_POS = [v for v in arguments.user_selected_vocabularies if v not in POS_categories]
+    if len(wrong_POS) > 0:
+        exit('Wrong POS selected: ' + ' '.join(wrong_POS) + '. Please choose from:\n' + '\n'.join('- {!s} ({!r})'.format(key,val) for (key,val) in POS_categories.items()))
+    
+    ### add lines to output header if user excluded categories
+    if len(arguments.user_selected_vocabularies) > 0:
+        output_header.append('Excluding: ' + ', '.join([POS_categories[v] for v in arguments.user_selected_vocabularies]))
+    
+    ### copy exclude_direct_matches argument into a global variable
+    is_direct_match_excluded = arguments.exclude_direct_matches
 
     ## load compounds to be analyzed
     with open(compounds_file, 'r') as f:
@@ -100,32 +146,30 @@ if __name__ == "__main__":
         with open(vocabulary_files[pos]) as vf:
             vocabulary[pos] = [(x.strip()) for x in vf.readlines() if x.strip() != '']
 
-    ## select words from vocabularies
+    ## build components list
     english_words = []
-    english_words += vocabulary['nltk_words']
-    english_words += vocabulary['most_common_english_words']
 
-    ## remove all 2-letters acronyms and abbreviations from general lexicon
-    english_words = [w for w in english_words if len(w) > 2]
+    ## select uncategorized words from vocabularies
+    if not arguments.exclude_uncategorized_words:
+        english_words += vocabulary['nltk_words']
+        english_words += vocabulary['uncategorized_english_words']
+
+        ### remove all n-letters acronyms and abbreviations from general lexicon (see: MIN_LENGTH_DEFAULT)
+        english_words = [w for w in english_words if len(w) >= arguments.min_uncategorized_words_length]
 
     ## select POS-categories
-    english_words += vocabulary['prepositions']
-    english_words += vocabulary['pronouns']
-    english_words += vocabulary['adverbs']
-    english_words += vocabulary['adjectives']
-    english_words += vocabulary['verbs']
-    english_words += vocabulary['nouns']
-    english_words += vocabulary['conjunctions']
-    english_words += vocabulary['interjections']
-    english_words += vocabulary['articles']
+    for key, val in POS_categories.items():
+        if key not in arguments.user_selected_vocabularies:
+            english_words += vocabulary[val]
 
-    ## make the components distinct (because there are intersections with general vocabularies)
+    ## make the components distinct (because there are intersections between general vocabularies)
     english_words = set(english_words)
 
     ## remove components in blacklist from selected components
     english_words = [c for c in english_words if c not in removed_words]
 
 
-    # MAIN FUNCTION
+    # MAIN SECTION
 
-    process_all_compounds()
+    print_header(output_header)
+    process_all_compounds(is_direct_match_excluded)
