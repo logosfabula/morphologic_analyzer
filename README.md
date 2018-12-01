@@ -19,27 +19,24 @@ No need of installation.
 
 ### Setup
 
-Fill: 
+Fill in: 
 `./compounds.txt`
 with the compound words to be analyzed.
 
-Then fill: 
+Then add the components you don't want to take into account in: 
 `./removed_words.txt`
-with the components you don't want to take into account.
 
 ### Use
 
-`./python main.py`
+`./python compounds_splitter.py`
 
-Results will appear on screen and in the file `./results.txt`
+Results will appear on screen and in `./results.txt`
 
 ### Testing
 
 Follow instructions on preconditions in `test_*.py`
 Run `Py.test`
 Support functions for tests are in `./test_support/`
-
-Results will appear on screen and in the file `./results.txt`
 
 ## Authors
 
