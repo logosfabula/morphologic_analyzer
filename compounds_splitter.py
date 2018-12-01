@@ -74,16 +74,16 @@ if __name__ == "__main__":
 
     # SETUP
 
-    ## job, blacklist and output files
+    ## job, blacklist, output files and vocabularies folder
     compounds_file = './compounds.txt'
     removed_words = './removed_words.txt'
     results_file = './results.txt'
+    vocabularies_folder = './vocabularies/'
 
     ## POS categories
     POS_categories = {'P': 'prepositions', 'PRO': 'pronouns', 'ADV': 'adverbs', 'ADJ': 'adjectives', 'V': 'verbs', 'N': 'nouns', 'CONJ': 'conjunctions', 'INTJ': 'interjections', 'D': 'determiners'}
 
     ## vocabularies folder and files
-    vocabularies_folder = './vocabularies/'
     vocabulary_files = {}
     vocabulary_files['prepositions'] = vocabularies_folder + '50_top_English_prepositions'
     vocabulary_files['pronouns'] = vocabularies_folder + '60_top_English_pronouns'
@@ -93,8 +93,8 @@ if __name__ == "__main__":
     vocabulary_files['nouns'] = vocabularies_folder + '1500_top_English_nouns'
     vocabulary_files['conjunctions'] = vocabularies_folder + '25_top_English_conjunctions'
     vocabulary_files['interjections'] = vocabularies_folder + '100_top_English_interjections'
-    vocabulary_files['uncategorized_english_words'] = vocabularies_folder + '10000_uncategorized_English_words'
-    vocabulary_files['nltk_words'] = vocabularies_folder + '235000_nltk_English_words'
+    vocabulary_files['uncategorized_english_words'] = vocabularies_folder + '10000_uncategorized_English_words_filtered' # filtered: POS vocabularies have been already excluded
+    vocabulary_files['nltk_words'] = vocabularies_folder + '235000_nltk_English_words_filtered' # filtered: POS vocabularies have been already excluded. 
     vocabulary_files['determiners'] = vocabularies_folder + 'English_determiners'
 
     ## minimum uncategorized words length default value
@@ -142,9 +142,9 @@ if __name__ == "__main__":
 
     ## build vocabulary
     vocabulary = {}
-    for pos in vocabulary_files:
-        with open(vocabulary_files[pos]) as vf:
-            vocabulary[pos] = [(x.strip()) for x in vf.readlines() if x.strip() != '']
+    for category in vocabulary_files:
+        with open(vocabulary_files[category]) as vf:
+            vocabulary[category] = [(x.strip()) for x in vf.readlines() if x.strip() != '']
 
     ## build components list
     english_words = []
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         if key not in arguments.user_selected_vocabularies:
             english_words += vocabulary[val]
 
-    ## make the components distinct (because there are intersections between general vocabularies)
+    ## make the components distinct (because there may be intersections between vocabularies)
     english_words = set(english_words)
 
     ## remove components in blacklist from selected components
