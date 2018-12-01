@@ -33,6 +33,14 @@ with the components you don't want to take into account.
 
 Results will appear on screen and in the file `./results.txt`
 
+### Testing
+
+Follow instructions on preconditions in `test_*.py`
+Run `Py.test`
+Support functions for tests are in `./test_support/`
+
+Results will appear on screen and in the file `./results.txt`
+
 ## Authors
 
 * **Anton Maria Prati** - *Initial work* - [logosfabula](https://github.com/logosfabula)
