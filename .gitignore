@@ -5,3 +5,5 @@ compounds.txt
 removed_words.txt
 .pytest_cache
 __pycache__
+manage_vocabularies.py
+managed_vocabularies
