@@ -9,7 +9,7 @@
 ##############              - compounds.txt                                   ##############
 ##############              with your list of compound words                  ##############
 ##############              - removed_words.txt                               ##############
-##############              with your list of components' exceptions          ##############
+##############              with your list of components exceptions           ##############
 ##############                                                                ##############
 ##############          3) run `python compounds_splitter.py`                 ##############
 ##############                                                                ##############
