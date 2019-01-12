@@ -2,16 +2,13 @@
 ##############                                                                ##############
 ##############          COMPOUND WORDS SPLITTER                               ##############
 ##############                                                                ##############
-##############          1) install NLTK                                       ##############
-##############              - `sudo pip install -U nltk`                      ##############
-##############                                                                ##############
-##############          2) edit files:                                        ##############
+##############          1) edit files:                                        ##############
 ##############              - compounds.txt                                   ##############
 ##############              with your list of compound words                  ##############
 ##############              - removed_words.txt                               ##############
 ##############              with your list of components exceptions           ##############
 ##############                                                                ##############
-##############          3) run `python compounds_splitter.py`                 ##############
+##############          2) run `python compounds_splitter.py`                 ##############
 ##############                                                                ##############
 ##############          Lexicon taken from various public sources             ##############
 ##############          including NLTK and UPenn                              ##############
