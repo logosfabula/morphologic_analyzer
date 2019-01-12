@@ -1,6 +1,6 @@
 # Simple Morphologic Analyzer 
 
-A handy tool for splitting English compounds into their components. It is based on a set of public English language corpora and NLTK.
+A handy tool for splitting English compounds into their components. It makes use of a set of public English language corpora and NLTK.
 
 ## Getting Started
 
