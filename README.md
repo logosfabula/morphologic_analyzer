@@ -7,12 +7,6 @@ A handy tool for splitting English compounds into their components. It makes use
 Type:
 `git clone https://github.com/logosfabula/morphologic_analyzer.git`
 
-### Prerequisites
-
-You need NLTK.
-
-`sudo pip install -U nltk`
-
 ### Installing
 
 No need of installation.
